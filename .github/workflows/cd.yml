@@ -1,0 +1,23 @@
+name: CD Pipeline
+
+on:
+    workflow_run:
+      workflows: ["CI Pipeline Chat"]
+      types:
+        - completed
+
+
+jobs:
+
+  build:
+
+    runs-on: self-hosted
+
+    steps:
+    - name: Pull Docker image 
+      run: sudo docker pull ashishshukla6161/cicd-pipeline-chat:latest     
+    - name: Delete Old Docker container
+      run: sudo docker rm -f cicd-pipeline-chat-container || true
+    - name: Run Docker Container with latest build
+      run: sudo docker run -d -p 8080:8080 --name cicd-pipeline-chat-container ashishshukla6161/cicd-pipeline-chat
+      
